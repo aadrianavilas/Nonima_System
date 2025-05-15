@@ -1,0 +1,272 @@
+{% extends 'layout/base_nav.html' %}
+
+{% load static %}
+{% block title %}{{title}}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <header class="page-header">
+        <h1 class="display-5 fw-bold text-primary">
+            <i class="fas fa-user-md me-2"></i>{{ title }}
+        </h1>
+        <p class="lead text-muted">Registrar sobretiempo</p>
+    </header>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    {% if error|length > 0 %}
+                        <div class="alert alert-danger" role="alert">
+                        {{error}}
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="{{ form.empleado.id_for_label }}" class="form-label">
+                                <i class="fas fa-user text-primary me-2"></i>{{ form.empleado.label }}
+                            </label>
+                            {{ form.empleado }}
+                            <div class="form-text text-muted" id="addressHelp">
+                                Ingrese nombre
+                            </div>
+                            {% if form.empleado.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.empleado.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.tipo_sobretiempo.id_for_label }}" class="form-label">
+                                <i class="fas fa-id-card text-primary me-2"></i>{{ form.tipo_sobretiempo.label }}
+                            </label>
+                            {{ form.tipo_sobretiempo }}
+                            <div class="form-text text-muted" id="honorariosHelp">
+                                Formato de cédula: 0999999999
+                            </div>
+                            {% if form.tipo_sobretiempo.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.tipo_sobretiempo.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.fecha_sobretiempo.id_for_label }}" class="form-label">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>{{ form.fecha_sobretiempo.label }}
+                            </label>             
+                                {{ form.fecha_sobretiempo }}
+                            <div class="form-text text-muted" id="honorariosHelp">
+                                Ingrese dirección
+                            </div>
+                            {% if form.fecha_sobretiempo.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.fecha_sobretiempo.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Sexo -->
+                        <div class="mb-4">
+                            <label for="{{ form.numero_horas.id_for_label }}" class="form-label">
+                                <i class="fas fa-venus-mars text-primary me-2"></i>{{ form.numero_horas.label }}
+                            </label>
+                            {{ form.numero_horas }}
+                            <div class="form-text text-muted" id="addressHelp">
+                                Seleccione el género
+                            </div>
+                            
+                            {% if form.numero_horas.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.numero_horas.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <label for="{{ form.valor.id_for_label }}" class="form-label">
+                                <i class="fas fa-money-bill-wave text-primary me-2"></i>{{ form.valor.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.valor }}
+                            </div>
+                            <div class="form-text text-muted" id="emailHelp">
+                                Ingrese el monto sin el signo de dólar. Ejemplo: 120.00
+                            </div>
+                            {% if form.valor.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.valor.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="mb-4">
+                            <label for="{{ form.is_active.id_for_label }}" class="form-label">
+                                <i class="fas fa-user-tie text-primary me-2"></i>{{ form.is_active.label }}
+                            </label>
+                            {{ form.is_active }}
+                            <div class="form-text text-muted" id="addressHelp">
+                                Cargo o posición laboral
+                            </div>
+                            {% if form.is_active.errors %}
+                            <div class="text-danger mt-1">
+                                {{ form.is_active.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        
+                        <div class="d-flex justify-content-between mt-4 pt-2">
+                            <a href="{% url 'payroll:list_sobretiempo' %}" class="btn btn-secondary" style="color:white;">
+                                <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary" style="color:white;">
+                                <i class="fas fa-save me-2"></i>Guardar Empleado
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'payroll:dashboard' %}" class="text-decoration-none">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'payroll:list_employees' %}"
+                    class="text-decoration-none">Empleados</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nuevo Empleado</li>
+        </ol>
+    </nav>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script >
+    const url='/api/tipo/'
+    empleadoSelect = document.getElementById("id_empleado");
+    tipo_sobretiempoSelect = document.getElementById("id_tipo_sobretiempo");
+    valorInput = document.getElementById("id_valor");
+    horasInput = document.getElementById("id_numero_horas");
+    valorInput.readOnly = true
+
+    //Cuando el usuario cambia el tipo de sobretiempo, entonces se escucha el evento change
+    tipo_sobretiempoSelect.addEventListener("change", function() {
+        id_tipo_sobretiempo = tipo_sobretiempoSelect.value;
+        id_empleado = empleadoSelect.value;
+        if(!id_tipo_sobretiempo){
+            alert("Seleccione un tipo de sobretiempo");
+            return;
+        }
+        if(!id_empleado){
+            alert("Seleccione un empleado");
+            return;
+        }
+        fetch(`${url}${id_empleado}/${id_tipo_sobretiempo}/`)
+            .then(response => response.json())
+            .then(data => {
+               valor = data.factor * data.salario/240 * horasInput.value
+               valorInput.value = valor.toFixed(2)
+               valorInput.readOnly = true
+            })
+            .catch(error => {
+                console.error('Error');
+            });
+
+        console.log(id_empleado)
+        console.log(id_tipo_sobretiempo)
+        horasInput.addEventListener('input',function(){
+            fetch(`${url}${id_empleado}/${id_tipo_sobretiempo}/`)
+            .then(response => response.json())
+            .then(data => {
+               valor = data.factor * data.salario/240 * horasInput.value
+               valorInput.value = valor.toFixed(2)
+               valorInput.readOnly = true
+            })
+            .catch(error => {
+                console.error('Error');
+            });
+            
+       })
+    });
+
+    //cuando el usuario cambia el empleado,entonces se escucha el evento change
+    empleadoSelect.addEventListener("change", function() {
+        id_tipo_sobretiempo = tipo_sobretiempoSelect.value;
+        id_empleado = empleadoSelect.value;
+        if(!id_tipo_sobretiempo){
+            alert("Seleccione un tipo de sobretiempo");
+            return;
+        }
+        if(!id_empleado){
+            alert("Seleccione un empleado");
+            return;
+        }
+        fetch(`${url}${id_empleado}/${id_tipo_sobretiempo}/`)
+            .then(response => response.json())
+            .then(data => {
+               valor = data.factor * data.salario/240 * horasInput.value
+               valorInput.value = valor.toFixed(2)
+               valorInput.readOnly = true
+            })
+            .catch(error => {
+                console.error('Error');
+            });
+
+        console.log(id_empleado)
+        console.log(id_tipo_sobretiempo)
+
+
+        horasInput.addEventListener('input',function(){
+            console.log("horasInput")
+            fetch(`${url}${id_empleado}/${id_tipo_sobretiempo}/`)
+            .then(response => response.json())
+            .then(data => {
+               valor = data.factor * data.salario/240 * horasInput.value
+               valorInput.value = valor.toFixed(2)
+               valorInput.readOnly = true
+            })
+            .catch(error => {
+                console.error('Error');
+            });
+            
+       })
+
+       
+       //cuando el usuario cambia el valor de horas, entonces se escucha el evento input
+    horasInput.addEventListener('input',function(){
+        console.log("horasInput")
+        id_tipo_sobretiempo = tipo_sobretiempoSelect.value;
+        id_empleado = empleadoSelect.value;
+        console.log(id_empleado)
+        console.log(id_tipo_sobretiempo)
+        fetch(`${url}${id_empleado}/${id_tipo_sobretiempo}/`)
+        .then(response => response.json())
+        .then(data => {
+           valor = data.factor * data.salario/240 * horasInput.value
+           valorInput.value = valor.toFixed(2)
+           valorInput.readOnly = true
+        })
+        .catch(error => {
+            console.error('Error');
+        });
+            
+       })
+        
+
+    });
+
+</script>
+
+{% endblock %}

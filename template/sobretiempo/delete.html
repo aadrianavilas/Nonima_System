@@ -1,0 +1,38 @@
+{% extends "layout/base_nav.html" %}
+{% load static %}
+{% block title %}{{title}}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mt-4 border border-2 shadow rounded ">
+        <div class="py-2 border border-1 shadow rounded bg-white">
+            <h1 class="fw-bold text-success text-center title-principal" style="color: black !important;">{{title}}</h1>
+        </div>
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show text-white" role="alert">
+            <strong> ¡ {{error}}</strong>, Verifique los datos...!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <form method="POST" class="m-4">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <div>
+                    <h1 class="fw-bold text-danger text-center message">¿Desea eliminar el Cargo
+                        '{{position.description}}'?</h1>
+                </div>
+                <div>
+                    <button class="btn btn-danger mx-2 btn-delete" type="submit">Eliminar</button>
+                    <a class="btn btn-warning ms-2 btn-cancel"
+                        href="{% url 'payroll:list_sobretiempo' %}">Cancelar</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

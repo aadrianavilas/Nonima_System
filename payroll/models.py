@@ -84,3 +84,26 @@ class Payslip(models.Model):
         super().save(*args,**kgars) #guardar en la base de datos con los campos calculados
 
 
+class TipoSobretiempo(models.Model):
+    descripcion = models.CharField(max_length=100)
+    factor = models.DecimalField(max_digits=3, decimal_places=2)
+    
+    def __str__(self):
+        return f"{self.descripcion} (Factor: {self.factor})"
+    
+
+class Sobretiempo(models.Model):
+    empleado = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    tipo_sobretiempo = models.ForeignKey(TipoSobretiempo, on_delete=models.CASCADE)
+    fecha_sobretiempo = models.DateField()
+    numero_horas = models.DecimalField(max_digits=5, decimal_places=2,validators=[MinValueValidator(1)])
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+    
+       
+    def __str__(self):
+        return f"Sobretiempo de {self.empleado.name} - {self.fecha_sobretiempo}"
+    
+
+    def show_active(self):
+        return  'Activo' if self.is_active else 'Inactivo'

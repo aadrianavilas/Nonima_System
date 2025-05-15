@@ -20,7 +20,7 @@ from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
 
-from payroll.views import auth, employees
+from payroll.views import auth, employees, sobretiempo
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,4 +29,6 @@ urlpatterns = [
     path("sign/up/",auth.sign_up,name='sign_up'),
     path("payroll/",include('payroll.urls',namespace='payroll')),
     path('api/employee/<int:employee_id>/', employees.get_employee_data, name='get_employee_data'),
+    path('api/tipo/<int:id_empleado>/', sobretiempo.get_tipo_sobretiempo_data, name='get_employee_data'),
+    path('api/tipo/<int:id_empleado>/<int:id_tipo_sobretiempo>/', sobretiempo.get_tipo_sobretiempo_data, name='get_sobretiempo_data'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
